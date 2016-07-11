@@ -96,10 +96,31 @@ describe Viking do
     end
 
     it 'attack with a weapon runs damage_with_weapon' do
-      expect(v).to receive(:damage_with_weapon).and_return(10)
+      fake_weapon = instance_double("Weapon", :use => 30, :is_a? => Weapon)
+      allow(v).to receive(:damage_with_weapon).and_return(10)
+      expect(v).to receive(:damage_with_weapon)
+      v.pick_up_weapon(fake_weapon)
       v.attack(z)
     end
 
+    it 'deals damage equal to the Viking strength times weapon multiplier when attacking with weapon' do
+      fake_weapon = instance_double("Weapon", :use => 30, :is_a? => Weapon)
+      expect(z).to receive(:receive_attack).with(fake_weapon.use * v.strength)
+      v.pick_up_weapon(fake_weapon)
+      v.attack(z)
+    end
+
+    it 'uses Fists instead if using Bow without enough arrows' do
+      lame_bow = Bow.new(0)
+      v.pick_up_weapon(lame_bow)
+      allow(v).to receive(:damage_with_fists).and_return(10)
+      expect(v).to receive(:damage_with_fists)
+      v.attack(z)
+    end
+
+    it 'raises an error when Viking is killed' do
+      expect{v.receive_attack(69)}.to raise_error("#{v.name} has Died...")
+    end
 
   end
 
