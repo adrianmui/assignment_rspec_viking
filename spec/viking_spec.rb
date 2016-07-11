@@ -82,6 +82,25 @@ describe Viking do
       v.attack(z)
     end
 
+    it 'attack with no weapon runs damage_with_fists' do
+      allow(v).to receive(:damage_with_fists).and_return(10)
+      expect(v).to receive(:damage_with_fists)
+      v.attack(z)
+    end
+
+    it 'attack with no weapon deals fists multipler * strength' do
+      f = Fists.new
+      fist_multiplier = f.use
+      expect(z).to receive(:receive_attack).with(fist_multiplier * v.strength)
+      v.attack(z)
+    end
+
+    it 'attack with a weapon runs damage_with_weapon' do
+      expect(v).to receive(:damage_with_weapon).and_return(10)
+      v.attack(z)
+    end
+
+
   end
 
 end
