@@ -13,8 +13,21 @@ describe Viking do
       expect(v.health).to eq(69)
     end
 
+    it 'health cannot be overwritten after it was set in initialize' do
+      expect{v.health = 22}.to raise_error
+    end
 
+    it 'Viking weapon starts out as nil on default' do
+      expect(v.weapon).to eq(nil)
+    end
+  end
 
+  describe '#pick_up_weapon' do
 
+    it 'picking up a Weapon sets it as the new weapon' do
+      w = instance_double("Weapon", :name => "Cool Weapon")
+      v.pick_up_weapon(w)
+      expect(v.weapon.name).to eq("Cool Weapon")
+    end
   end
 end

@@ -35,9 +35,8 @@ describe Bow do
     end
 
     it 'using a bow with 0 arrows throws an error' do
-      new_bow = Bow.new(0)
-
-      expect{new_bow.use}.to raise_error("Out of arrows")
+      allow(b).to receive(:out_of_arrows?).and_return(true)
+      expect{b.use}.to raise_error("Out of arrows")
     end
 
   end
