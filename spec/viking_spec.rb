@@ -44,11 +44,44 @@ describe Viking do
     end
   end
 
-  describe '#drop_weapon'
+  describe '#drop_weapon' do
     it 'dropping a weapon leaves it weaponless' do
-      
+      v.drop_weapon
+      expect(v.weapon).to eq(nil)
     end
   end
 
+  describe '#receive_attack' do
+    it 'reduces Viking health by specified amount' do
+      allow(v).to receive(:puts)
+      v.receive_attack(10)
+      expect(v.health).to eq(59)
+    end
+
+    it 'calls the take_damage method' do
+      expect(v).to receive(:take_damage).with(10)
+      v.receive_attack(10)
+    end
   end
+
+  describe '#attack' do
+    let (:z){Viking.new("Adrian", 69)}
+    before do
+      allow(v).to receive(:puts)
+      allow(z).to receive(:puts)
+    end
+
+    it 'causes the recipient health to drop' do
+      allow(v).to receive(:damage_dealt).and_return(10)
+      v.attack(z)
+      expect(z.health).to eq(59)
+    end
+
+    it 'calls that Viking take_damage method' do
+      expect(z).to receive(:take_damage)
+      v.attack(z)
+    end
+
+  end
+
 end
